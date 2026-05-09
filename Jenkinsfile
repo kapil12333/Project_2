@@ -40,7 +40,7 @@ pipeline {
                     sh '''
                     scp -O -o StrictHostKeyChecking=no \
                     target/*.war \
-                    ubuntu@44.200.226.238:/home/ubuntu/opt/tomcat/webapps/webapp.war'
+                    ubuntu@44.200.226.238:/opt/tomcat/webapps/webapp.war
                     '''
                 }
             }
