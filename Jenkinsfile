@@ -1,30 +1,21 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.0'
-            args '-v /root/.m2:/root/.m2'
-        }
+pipeline { 
+    agent any 
+    tools {
+        maven 'Maven'
     }
     stages {
-        stage('Build') {
+        stages ('Initialize') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                sh '''    
+                            echo "PATH -$(PATH)"
+                            echo "M2_HOME = $(M2_HOME)"
+                    '''
             }
         }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
+
+        stage ('Builds') {
+            sh 'mvn clean package'
         }
-        stage('Deliver') {
-            steps {
-                sh './jenkins/scripts/deliver.sh'
-            }
-        }
+
     }
 }
