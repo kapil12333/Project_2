@@ -32,5 +32,29 @@ pipeline {
                 sh './jenkins/scripts/deliver.sh'
             }
         }
+
+        stage('Deploy-To-Tomcat') {
+            steps {
+                sshagent(['tomcat']) {
+                    sh '''
+                    scp -o StrictHostKeyChecking=no target/*.war root@44.200.226.238:/opt/tomcat/webapps/webapp.war
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed!'
+        }
+
+        always {
+            echo 'Pipeline execution completed.'
+        }
     }
 }
