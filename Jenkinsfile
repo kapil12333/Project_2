@@ -33,13 +33,16 @@ pipeline {
             }
         }
 
-       stage('Deploy-To-Tomcat') {
-    steps {
-        sh '''
-        scp -i /path/to/key.pem -o StrictHostKeyChecking=no target/*.jar root@44.200.226.238:/opt/tomcat/webapps/
-        '''
+        stage('Deploy-To-Tomcat') {
+            steps {
+                sshagent(['tomcat']) {
+                    sh '''
+                    scp -o StrictHostKeyChecking=no target/*.war root@44.200.226.238:/opt/tomcat/webapps/webapp.war
+                    '''
+                }
+            }
+        }
     }
-}
 
     post {
         success {
