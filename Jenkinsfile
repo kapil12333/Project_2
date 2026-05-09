@@ -38,7 +38,7 @@ pipeline {
             steps {
                 sshagent(['tomcat']) {
                     sh '''
-                    scp -o StrictHostKeyChecking=no target/*.war root@44.200.226.238:/opt/tomcat/webapps/
+                    scp -o StrictHostKeyChecking=no target/*.jar root@44.200.226.238:/opt/tomcat/webapps/
                     '''
                 }
             }
