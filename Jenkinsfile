@@ -1,20 +1,36 @@
-pipeline { 
-    agent any 
-    tools {
-        maven 'Maven'
-    }
+pipeline {
+    agent any
+
     stages {
-        stages ('Initialize') {
+
+        stage('Initialize') {
             steps {
-                sh '''    
-                            echo "PATH -$(PATH)"
-                            echo "M2_HOME = $(M2_HOME)"
-                    '''
+                echo 'Initializing pipeline...'
             }
         }
 
-        stage ('Builds') {
-            sh 'mvn clean package'
+        stage('Build') {
+            steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Deliver') {
+            steps {
+                sh './jenkins/scripts/deliver.sh'
+            }
         }
 
     }
